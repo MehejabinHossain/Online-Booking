@@ -1,0 +1,17 @@
+.orbs-bg-img-car {
+    background-image: url('../images/car-booking.jpg');
+    background-size: cover;
+}
+.orbs-bg-img-resort {
+    background-image: url('../images/resort-booking.jpg');
+    background-size: cover;
+}
+.orbs-bg-img-room {
+    background-image: url('../images/room-booking.jpg');
+    background-size: cover;
+}
+
+.orbs-bg-img-hall {
+    background-image: url('../images/conference-hall.jpg');
+    background-size: cover;
+}

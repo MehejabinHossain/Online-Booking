@@ -1,0 +1,81 @@
+#+TITLE: Online Reservation and Booking System
+#+AUTHOR: Shafiqur Rahman
+* System Features 
+  - Administrator offer various reservations such as vehicles,
+    resorts, hotel rooms.
+  - Admin can check in or check out a customer.
+  - Admin can add customer details.
+  - Customer can book easily.
+  - Customer can update booking.
+  - Customer can make online payment.
+
+* Database Design
+  - Employee Table
+    | column_name | type | key |
+    |-------------+----------+-----|
+    | id          | text     | pk  |
+    | name        | text     |     |
+    | phone       | text     |     |
+    | email       | text     |     |
+    | is_admin    | 0 or 1   |     |
+
+  - Customer Table
+    | column_name | type   | key |
+    |-------------+--------+-----|
+    | id          | text   | pk  |
+    | name        | text   |     |
+    | phone       | text   |     |
+    | email       | text   |     |
+    | employee_id | number | fk  |
+
+  - Product Information Table
+    | column_name | type    | key |
+    |-------------+---------+-----|
+    | id          | text    | pk  |
+    | type        | varchar |     |
+    | name        | varchar |     |
+    | model       | varchar |     |
+    | address     | text    |     |
+    | description | text    |     |
+    | price       | text    |     |
+    | image_link  | text    |     |
+    | employee_id | number  | fk  |
+    
+  - Booking Table
+    | column_name  | type   | key |
+    |--------------+--------+-----|
+    | id           | text   | pk  |
+    | start_date   | date   |     |
+    | end_date     | date   |     |
+    | product_id   | number | fk  |
+    | customer_id  | number | fk  |
+    | employee_id  | number | fk  |
+
+* Database Relations
+  - Many Customer can book many vehicles, resorts, Conference Hall.
+  - One Admin can create many Customers.
+  - One Admin can create many vehicles, resorts, Conference Hall.
+
+* SQL Commands  
+** Employee Table
+   #+BEGIN_SRC sql
+     CREATE TABLE `orbs`.`employee` ( `id` INT NOT NULL AUTO_INCREMENT , `name` VARCHAR(255) NOT NULL , `phone` VARCHAR(11) NOT NULL , `email` VARCHAR(100) NOT NULL , `isAdmin` TINYINT(1) NOT NULL , PRIMARY KEY (`id`)) ENGINE = InnoDB; 
+   #+END_SRC
+
+** Customer Table
+   #+BEGIN_SRC sql
+     CREATE TABLE `orbs`.`customer` ( `id` INT NOT NULL AUTO_INCREMENT , `name` VARCHAR(255) NOT NULL , `phone` VARCHAR(12) NOT NULL , `email` VARCHAR(100) NOT NULL , `employee_id` INT NOT NULL , PRIMARY KEY (`id`)) ENGINE = InnoDB; 
+     ALTER TABLE `customer` ADD CONSTRAINT `employee_id_const` FOREIGN KEY (`employee_id`) REFERENCES `employee`(`id`) ON DELETE RESTRICT ON UPDATE RESTRICT;  
+   #+END_SRC
+
+** Product Table
+   #+BEGIN_SRC sql
+     CREATE TABLE `orbs`.`product_information` ( `id` INT NOT NULL AUTO_INCREMENT , `type` INT NOT NULL , `name` INT NOT NULL , `model` INT NOT NULL , `address` INT NULL , `description` TEXT NOT NULL , `price` INT NOT NULL , `image_link` INT NOT NULL , `employee_id` INT NOT NULL , PRIMARY KEY (`id`)) ENGINE = InnoDB;
+     ALTER TABLE `product_information` ADD CONSTRAINT `employee_id_p` FOREIGN KEY (`employee_id`) REFERENCES `employee`(`id`) ON DELETE RESTRICT ON UPDATE RESTRICT; 
+   #+END_SRC
+
+** Booking
+   #+BEGIN_SRC sql
+     CREATE TABLE `orbs`.`booking` ( `id` INT NOT NULL AUTO_INCREMENT , `booking_type` VARCHAR(100) NOT NULL , `start_date` DATE NOT NULL , `end_date` DATE NOT NULL , `product_id` INT NOT NULL , `customer_id` INT NOT NULL , `employee_id` INT NOT NULL , PRIMARY KEY (`id`), UNIQUE (`product_id`), UNIQUE (`customer_id`), UNIQUE (`employee_id`)) ENGINE = InnoDB;
+     ALTER TABLE `booking` ADD CONSTRAINT `product_id_const_b` FOREIGN KEY (`product_id`) REFERENCES `product_information`(`id`) ON DELETE RESTRICT ON UPDATE RESTRICT; ALTER TABLE `booking` ADD CONSTRAINT `customer_id_const_p` FOREIGN KEY (`customer_id`) REFERENCES `customer`(`id`) ON DELETE RESTRICT ON UPDATE RESTRICT; ALTER TABLE `booking` ADD CONSTRAINT `employee_id_const_p` FOREIGN KEY (`employee_id`) REFERENCES `employee`(`id`) ON DELETE RESTRICT ON UPDATE RESTRICT; 
+   #+END_SRC
